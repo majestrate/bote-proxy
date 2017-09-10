@@ -67,8 +67,7 @@ class FilterServer(smtpd.SMTPServer):
 
         try:
             log("processing mail from {}".format(mailfrom))
-            log("message = {}".format(data))
-            msg = email.message_from_string(data)
+            msg = email.message_from_string(data + "\n")
             log("got message {}".format(msg))
         except:
             log("failed to parse mail message")
