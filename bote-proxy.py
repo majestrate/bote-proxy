@@ -87,7 +87,7 @@ class FilterServer(smtpd.SMTPServer):
                 log("filter mail failed")
                 log(traceback.format_exc())
         else:
-            self.try_inject(mailfrom, recips, data)
+            self.try_inject(mailfrom, recips, msg.as_string())
 
     def try_inject(self, mailfrom, rpttos, data):
         """
