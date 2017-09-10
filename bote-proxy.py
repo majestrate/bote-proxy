@@ -74,11 +74,15 @@ class FilterServer(smtpd.SMTPServer):
             return
         log("message parsed")
         if self.filterMail:
-            newmsg = self.filterMail(msg, mailfrom, recips)
-            if newmsg:
-                self.try_inject(mailfrom, recips, newmsg.as_bytes())
-            else:
-                log("message filtered from {}".format(mailfrom))
+            try:
+                newmsg = self.filterMail(msg, mailfrom, recips)
+                if newmsg:
+                    self.try_inject(mailfrom, recips, newmsg.as_bytes())
+                else:
+                    log("message dropped")
+            except:
+                log("filter mail failed")
+                log(traceback.format_exc())
         elif msg:
             self.try_inject(mailfrom, recips, msg.as_bytes())
         else:
