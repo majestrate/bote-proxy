@@ -157,12 +157,9 @@ class BoteSender:
         strip email message of anything not encrypted
         """
         log("filtering message....")
-        newmsg = EmailMessage()
-        for k, v in msg.items():
-            if k not in self._blacklistHeaders:
-                log(k)
-                newmsg[k] = v
-
+        newmsg = EmailMessage(policy=email.policy.SMTP)
+        log(msg.preamble)
+        newmsg.preamble = msg.preamble
         addedParts = 0
             
         for part in msg.walk():
