@@ -52,6 +52,26 @@ class FilterServer(smtpd.SMTPServer):
         
 
 def main(args):
+    fnames = ["/etc/bote-proxy.ini", "bote-proxy.ini"]
+    if len(args) > 0:
+        for arg in args:
+            fnames.append(arg)
+    fname = None
+    for f in fnames:
+        if os.path.exists(f):
+            fname = f
+            break
+    else:
+        print("no config found, exiting")
+        return
+    cfg = configparser.ConfigParser()
+    try:
+        print("reading config file {}".format(fname))
+        cfg.read(fname)
+    except:
+        print("failed to read config file {}: {}".format(fname, traceback.format_exc()))
+        return
+        
     print("filter server starting up")
     server = FilterServer(('127.0.0.1', 10025), None)
     asyncore.loop()

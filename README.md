@@ -13,3 +13,14 @@ master.cf:
          localhost:10026 inet n - n - 10 smtpd -o content_filter= -o receive_override_options=no_unknown_recipient_checks,no_header_body_checks,no_milters -o smtpd_authorized_xforward_hosts=127.0.0.0/8
 
 
+
+Setup:
+
+
+    $ python3.6 -m venv v
+    $ v/bin/pip install -r requirements
+
+Running:
+
+    $ v/bin/python bote-proxy.py bote-proxy.ini
+
