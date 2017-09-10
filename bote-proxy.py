@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.6
 
 import email
+import email.policy
 from email.message import EmailMessage, MIMEPart
 import smtpd
 import asyncore
