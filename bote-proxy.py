@@ -46,11 +46,11 @@ class DB:
         self._metadata.create_all(self._engine)
         
     def getBoteUsers(self, recips):
-        yield from select([self._boteusers.c.bote_address]).where(self._boteusers.c.email in recips).execute().fetchall()
+        yield from self._engine.execute(select([self._boteusers.c.bote_address]).where(self._boteusers.c.email in recips)).fetchall()
 
     def getLocalusers(self, recips):
-        yield from select([self._v_aliases.c.destination.label('email')]).where(self._v_aliases.c.source in recips).execute().fetchall()
-        yield from select([self._v_users.c.email]).where(self._v_users.c.email in recips).execute().fetchall()
+        yield from self._engine(select([self._v_aliases.c.destination.label('email')]).where(self._v_aliases.c.source in recips)).fetchall()
+        yield from self._engine(select([self._v_users.c.email]).where(self._v_users.c.email in recips)).fetchall()
 
 class FilterServer(smtpd.SMTPServer):
 
