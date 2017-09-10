@@ -8,7 +8,8 @@ import traceback
 import configparser
 import traceback
 import sys
-#import sqlalchemy
+import os
+import sqlalchemy
 
 unquote = lambda s : s.replace('\'', '').replace('\"', '')
 
@@ -36,7 +37,7 @@ class FilterServer(smtpd.SMTPServer):
             if msg:
                 self.try_inject(mailfrom, recips, msg.as_bytes())
             else:
-                print("message dropped")
+                print("message from {} dropped".format(mailfrom))
                 
 
     def try_inject(self, mailfrom, rpttos, data):
@@ -48,16 +49,22 @@ class FilterServer(smtpd.SMTPServer):
             mail.sendmail(mailfrom, rpttos, data)
             mail.quit()
         except:
-            print(traceback.format_exc())
-        
+            print("try_inject(): {}".format(traceback.format_exc()))
+
+
+def filterMail(msg):
+    """
+    do actual mail filtering
+    """
+    return msg
 
 def main(args):
     fnames = ["/etc/bote-proxy.ini", "bote-proxy.ini"]
     if len(args) > 0:
-        for arg in args:
-            fnames.append(arg)
+        fnames = args
     fname = None
     for f in fnames:
+        print("checking for config file: {}".format(f))
         if os.path.exists(f):
             fname = f
             break
