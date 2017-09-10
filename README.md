@@ -1,18 +1,15 @@
 # bote proxy
 
-filtering mail gateway for i2pbote with webapp
+i2pbote mail proxy/filter for postfix
 
 
-## building
+main.cf: 
 
-Building this daemon requires the following:
+    content_filter = scan:localhost:10025 receive_override_options = no_address_mappings
 
-* go 1.9
-* mysql
-* configured mail server
+master.cf: 
 
-To build:
-
-    $ go get -u -v github.com/majestrate/bote-proxy
+     scan unix - - n - 10 smtp -o smtp_send_xforward_command=yes -o disable_mime_output_conversion=yes
+         localhost:10026 inet n - n - 10 smtpd -o content_filter= -o receive_override_options=no_unknown_recipient_checks,no_header_body_checks,no_milters -o smtpd_authorized_xforward_hosts=127.0.0.0/8
 
 
