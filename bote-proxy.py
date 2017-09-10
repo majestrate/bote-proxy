@@ -27,7 +27,7 @@ class FilterServer(smtpd.SMTPServer):
             recips.append(unquote(recip))
 
         try:
-            msg = email.message_from_bytes(data)
+            msg = email.message_from_string(data)
         except:
             print("failed to parse mail message")
             print(traceback.format_exc())
