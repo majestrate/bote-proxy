@@ -179,7 +179,7 @@ class BoteSender:
         """
         determine if a part is encrypted or not
         """
-        content = part.get_content()
+        content = part.get_body()
         return content.upper().startsWith('-----BEGIN PGP MESSAGE-----')
             
     def forwardToBote(self, recip, msg):
