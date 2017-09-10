@@ -49,7 +49,7 @@ class DB:
         self._metadata.create_all(self._engine)
         
     def getBoteUsers(self, recips):
-        yield from self._engine.execute(select([self._boteusers.c.bote_address]).where(self._boteusers.c.email.in_(recips))).fetchall()
+        yield from self._engine.execute(select([self._boteusers.c.bote_address, self._boteusers.c.email]).where(self._boteusers.c.email.in_(recips))).fetchall()
 
     def getLocalUsers(self, recips):
         yield from self._engine.execute(select([self._v_aliases.c.destination.label('email')]).where(self._v_aliases.c.source.in_(recips))).fetchall()
@@ -129,9 +129,9 @@ class BoteSender:
             localUsers = self.getLocalUsers(recips)
             newmsg = self.stripMessage(msg)
             if newmsg:
-                for recip in botes:
+                for recip, email in botes:
                     self.forwardToBote(recip, newmsg)
-                    localUsers.remove(recip)
+                    localUsers.remove(email)
             else:
                 return        
             if localUsers and len(localUsers) > 0:
@@ -151,7 +151,7 @@ class BoteSender:
     def getBoteRecips(self, recips):
         found = list()
         for recip in self._db.getBoteUsers(recips):
-            found.append(recip[0])
+            found.append((recip[0], recip[1]))
         if len(found) > 0:
             return found
 
