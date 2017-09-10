@@ -11,8 +11,9 @@ type Configurable interface {
 }
 
 type Config struct {
-	SMTP SMTPConfig
-	WebApp WebappConfig
+	SMTP     SMTPConfig
+	WebApp   WebappConfig
+	Database DatabaseConfig
 }
 
 func (cfg *Config) LoadFile(fname string) error {
@@ -21,13 +22,14 @@ func (cfg *Config) LoadFile(fname string) error {
 		return err
 	}
 	sects := map[string]Configurable{
-		"smtp": &cfg.SMTP,
-		"webapp" : &cfg.WebApp,
+		"smtp":     &cfg.SMTP,
+		"webapp":   &cfg.WebApp,
+		"database": &cfg.Database,
 	}
 	for name, sect := range sects {
 		s, _ := c.Section(name)
 		if s == nil {
-			return errors.New("missing section: "+name)
+			return errors.New("missing section: " + name)
 		}
 		err = sect.Load(s)
 		if err != nil {

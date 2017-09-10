@@ -2,12 +2,11 @@ package main
 
 import (
 	"github.com/majestrate/bote-proxy/config"
-	"github.com/majestrate/bote-proxy/smtp"
 	"github.com/majestrate/bote-proxy/maildir"
-	"os"
+	"github.com/majestrate/bote-proxy/smtp"
 	"net"
+	"os"
 )
-
 
 func main() {
 	var conf config.Config
@@ -20,11 +19,11 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	
+
 	server := smtp.Server{
-		Appname: "bote-proxy",
+		Appname:  "bote-proxy",
 		Hostname: conf.SMTP.HostName,
-		MailDir: maildir.MailDir(conf.SMTP.TempMailDir),
+		MailDir:  maildir.MailDir(conf.SMTP.TempMailDir),
 	}
 	l, err := net.Listen("tcp", conf.SMTP.BindAddr)
 	if err != nil {

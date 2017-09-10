@@ -1,9 +1,9 @@
-
 package smtp
 
 import (
 	"bytes"
 	"fmt"
+	"github.com/majestrate/bote-proxy/maildir"
 	"io"
 	"net"
 	"net/smtp"
@@ -11,7 +11,6 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"github.com/majestrate/bote-proxy/maildir"
 )
 
 var (
