@@ -163,8 +163,8 @@ class BoteSender:
         """
         log("filtering message....")
         newmsg = EmailMessage(policy=email.policy.SMTP)
-        log(msg.preamble)
-        newmsg.preamble = msg.preamble
+        for k in msg:
+            newmsg[k] = msg[k]
         addedParts = 0
             
         for part in msg.walk():
