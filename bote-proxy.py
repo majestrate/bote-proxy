@@ -71,13 +71,15 @@ class FilterServer(smtpd.SMTPServer):
         except:
             log("failed to parse mail message")
             log(traceback.format_exc())
+            return
+        
+        if self.filterMail:
+            log("filtering mail from {}".format(mailfrom))
+            msg = self.filterMail(msg, mailfrom, recips)
+        if msg:
+            self.try_inject(mailfrom, recips, msg.as_bytes())
         else:
-            if self.filterMail:
-                msg = self.filterMail(msg, mailfrom, recips)
-            if msg:
-                self.try_inject(mailfrom, recips, msg.as_bytes())
-            else:
-                log("message from {} dropped".format(mailfrom))
+            log("message from {} dropped".format(mailfrom))
                 
 
     def try_inject(self, mailfrom, rpttos, data):
@@ -124,6 +126,7 @@ class BoteSender:
             if localUsers:
                 return msg
         else:
+            log("no bote recipiants")
             # no bote recipiants
             return msg
 
