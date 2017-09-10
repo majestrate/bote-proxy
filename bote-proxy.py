@@ -160,6 +160,7 @@ class BoteSender:
         newmsg = EmailMessage()
         for k, v in msg.items():
             if k not in self._blacklistHeaders:
+                log(k)
                 newmsg[k] = v
 
         addedParts = 0
