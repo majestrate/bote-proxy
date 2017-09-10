@@ -46,11 +46,11 @@ class DB:
         self._metadata.create_all(self._engine)
         
     def getBoteUsers(self, recips):
-        yield from select([self._boteusers.c.bote_address]).where(self._boteusers.c.email in recips).execute()
+        yield from select([self._boteusers.c.bote_address]).where(self._boteusers.c.email in recips).execute().fetchall()
 
     def getLocalusers(self, recips):
-        yield from select([self._v_aliases.c.destination.label('email')]).where(self._v_aliases.c.source in recips).execute()
-        yield from select([self._v_users.c.email]).where(self._v_users.c.email in recips).execute()        
+        yield from select([self._v_aliases.c.destination.label('email')]).where(self._v_aliases.c.source in recips).execute().fetchall()
+        yield from select([self._v_users.c.email]).where(self._v_users.c.email in recips).execute().fetchall()
 
 class FilterServer(smtpd.SMTPServer):
 
@@ -77,17 +77,14 @@ class FilterServer(smtpd.SMTPServer):
             try:
                 newmsg = self.filterMail(msg, mailfrom, recips)
                 if newmsg:
-                    self.try_inject(mailfrom, recips, newmsg.as_bytes())
+                    self.try_inject(mailfrom, recips, newmsg.as_string())
                 else:
                     log("message dropped")
             except:
                 log("filter mail failed")
                 log(traceback.format_exc())
-        elif msg:
-            self.try_inject(mailfrom, recips, msg.as_bytes())
         else:
-            log("message from {} dropped".format(mailfrom))
-                
+            self.try_inject(mailfrom, recips, data)
 
     def try_inject(self, mailfrom, rpttos, data):
         """
