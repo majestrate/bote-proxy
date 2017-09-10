@@ -161,6 +161,7 @@ class BoteSender:
         """
         strip email message of anything not encrypted
         """
+        addedParts = 0
         log("filtering message....")
         for part in msg.walk():
             contentType = part.get_content_type().lower()
