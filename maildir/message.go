@@ -1,7 +1,5 @@
 package maildir
 
-package maildir
-
 import (
 	"path/filepath"
 	"strings"

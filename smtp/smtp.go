@@ -179,7 +179,6 @@ func (s *session) serve() {
 			if err == nil {
 				c.PrintfLine("250 Ok: Delivered")
 			} else {
-				log.Error("smtp server error: %s", err.Error())
 				c.PrintfLine("500 Error delivering message: %s", err.Error())
 			}
 			from = ""
