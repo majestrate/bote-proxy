@@ -136,7 +136,7 @@ class BoteSender:
         
     def getBoteRecips(self, recips):
         found = list()
-        for recip in self._db.getBoteRecips(recips):
+        for recip in self._db.getBoteUsers(recips):
             found.append(recip[0])
         if len(found) > 0:
             return found
