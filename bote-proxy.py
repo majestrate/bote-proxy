@@ -24,8 +24,8 @@ class DB:
         self._metadata = SA.MetaData()
         self._boteusers = SA.Table('boteusers', self._metadata, 
                                    SA.Column('uid', SA.Integer, primary_key=True, autoincrement=True),
-                                   SA.Column('email', SA.String, nullable=False),
-                                   SA.Column('bote_address', SA.String, nullable=False))
+                                   SA.Column('email', SA.String(100), nullable=False),
+                                   SA.Column('bote_address', SA.String(512), nullable=False))
         
         self._v_domains = SA.Table('virtual_domains', self._metadata,
                                    SA.Column('id', SA.Integer, primary_key=True, autoincrement=True),
