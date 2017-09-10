@@ -174,7 +174,14 @@ class BoteSender:
             return newmsg
         else:
             log("no encrypted parts found in message, dropping")
-        
+
+    def partIsEncrypted(self, part):
+        """
+        determine if a part is encrypted or not
+        """
+        content = part.get_content()
+        return content.upper().startsWith('-----BEGIN PGP MESSAGE-----')
+            
     def forwardToBote(self, recip, msg):
         """
         forward message to i2pbote
