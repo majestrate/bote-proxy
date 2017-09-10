@@ -14,6 +14,8 @@ import os
 import sqlalchemy as SA
 from sqlalchemy.sql import select
 
+from pgpdump import AsciiData
+
 unquote = lambda s : s.replace('\'', '').replace('\"', '')
 
 log = lambda s : sys.stdout.write("{}\n".format(s)) and sys.stdout.flush()
@@ -179,9 +181,13 @@ class BoteSender:
         """
         determine if a part is encrypted or not
         """
-        content = part.get_payload()
-        return content.upper().startswith('-----BEGIN PGP MESSAGE-----')
+        try:
+            data = AsciiData(part.get_payload())
+            return len(data.packets()) > 0
+        except:
+            return False
             
+
     def forwardToBote(self, recip, msg):
         """
         forward message to i2pbote
