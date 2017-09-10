@@ -13,6 +13,8 @@ import sqlalchemy
 
 unquote = lambda s : s.replace('\'', '').replace('\"', '')
 
+log = lambda s : sys.stdout.write("{}\n".format(s)) and sys.stdout.flush()
+
 class FilterServer(smtpd.SMTPServer):
 
     filterMail = None
@@ -27,17 +29,18 @@ class FilterServer(smtpd.SMTPServer):
             recips.append(unquote(recip))
 
         try:
+            log("processing mail from {}".format(mailfrom))
             msg = email.message_from_string(data)
         except:
-            print("failed to parse mail message")
-            print(traceback.format_exc())
+            log("failed to parse mail message")
+            log(traceback.format_exc())
         else:
             if self.filterMail:
                 msg = self.filterMail(msg)
             if msg:
                 self.try_inject(mailfrom, recips, msg.as_bytes())
             else:
-                print("message from {} dropped".format(mailfrom))
+                log("message from {} dropped".format(mailfrom))
                 
 
     def try_inject(self, mailfrom, rpttos, data):
@@ -45,11 +48,12 @@ class FilterServer(smtpd.SMTPServer):
         try injecting mail back into postfix
         """
         try:
+            log("try injecting mail for {}".format(mailfrom))
             mail = smtplib.SMTP("localhost", 10026)
             mail.sendmail(mailfrom, rpttos, data)
             mail.quit()
         except:
-            print("try_inject(): {}".format(traceback.format_exc()))
+            log("try_inject(): {}".format(traceback.format_exc()))
 
 
 def filterMail(msg):
@@ -64,22 +68,22 @@ def main(args):
         fnames = args
     fname = None
     for f in fnames:
-        print("checking for config file: {}".format(f))
+        log("checking for config file: {}".format(f))
         if os.path.exists(f):
             fname = f
             break
     else:
-        print("no config found, exiting")
+        log("no config found, exiting")
         return
     cfg = configparser.ConfigParser()
     try:
-        print("reading config file {}".format(fname))
+        log("reading config file {}".format(fname))
         cfg.read(fname)
     except:
         print("failed to read config file {}: {}".format(fname, traceback.format_exc()))
         return
         
-    print("filter server starting up")
+    log("filter server starting up")
     server = FilterServer(('127.0.0.1', 10025), None)
     asyncore.loop()
     
