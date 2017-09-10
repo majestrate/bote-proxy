@@ -11,6 +11,9 @@ type SMTPConfig struct {
 }
 
 func (cfg *SMTPConfig) Load(s *parser.Section) error {
+	cfg.BindAddr = s.Get("bind", "127.0.0.1:2525")
+	cfg.HostName = s.Get("hostname", "bote-proxy.i2p.rocks")
+	cfg.TempMailDir = s.Get("tempdir", "/tmp/bote-proxy")
 	return nil
 }
 

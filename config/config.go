@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	parser "github.com/majestrate/configparser"
 )
 
@@ -25,6 +26,9 @@ func (cfg *Config) LoadFile(fname string) error {
 	}
 	for name, sect := range sects {
 		s, _ := c.Section(name)
+		if s == nil {
+			return errors.New("missing section: "+name)
+		}
 		err = sect.Load(s)
 		if err != nil {
 			return err
