@@ -157,8 +157,9 @@ class BoteSender:
         """
         log("filtering message....")
         newmsg = EmailMessage()
-        for k in msg.keys():
-            newmsg[k] = msg[k]
+        for k, v in msg.values():
+            log("{} = {}".format(k, v))
+            newmsg[k] = v
 
         addedParts = 0
             
