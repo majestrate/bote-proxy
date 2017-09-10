@@ -131,8 +131,7 @@ class BoteSender:
             if newmsg:
                 for recip in botes:
                     self.forwardToBote(recip, newmsg)
-                    if recip in localUsers:
-                        localUsers.remove(recip)
+                    localUsers.remove(recip)
             else:
                 return        
             if localUsers and len(localUsers) > 0:
