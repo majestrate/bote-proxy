@@ -166,8 +166,9 @@ class BoteSender:
             contentType = part.get_content_type().lower()
             if contentType in self._acceptedMimeTypes or (contentType in self._filteringMimeTypes and self.partIsEncrypted(part)):
                 addedParts += 1
-            elif not part.is_multipart():
-                part.clear()
+            else:
+                log(dir(part))
+                part.clear_content()
                 
         if addedParts > 0:
             log("attached {} encrypted parts".format(addedParts))
