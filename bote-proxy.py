@@ -162,20 +162,16 @@ class BoteSender:
         strip email message of anything not encrypted
         """
         log("filtering message....")
-        newmsg = EmailMessage(policy=email.policy.SMTP)
-        for k in msg:
-            newmsg[k] = msg[k]
-        addedParts = 0
-            
         for part in msg.walk():
             contentType = part.get_content_type().lower()
             if contentType in self._acceptedMimeTypes or (contentType in self._filteringMimeTypes and self.partIsEncrypted(part)):
-                newmsg.attach(part)
                 addedParts += 1
-
+            else:
+                part.clear()
+                
         if addedParts > 0:
             log("attached {} encrypted parts".format(addedParts))
-            return newmsg
+            return msg
         else:
             log("no encrypted parts found in message, dropping")
 
