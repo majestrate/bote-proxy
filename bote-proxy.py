@@ -166,9 +166,6 @@ class BoteSender:
             contentType = part.get_content_type().lower()
             if contentType in self._acceptedMimeTypes or (contentType in self._filteringMimeTypes and self.partIsEncrypted(part)):
                 addedParts += 1
-            else:
-                log(dir(part))
-                part.clear_content()
                 
         if addedParts > 0:
             log("attached {} encrypted parts".format(addedParts))
@@ -181,7 +178,7 @@ class BoteSender:
         determine if a part is encrypted or not
         """
         try:
-            data = AsciiData(part.get_payload())
+            data = AsciiData(part.get_payload(decode=True))
             packets = list()
             for pkt in data.packets():
                 packets.append(pkt)
