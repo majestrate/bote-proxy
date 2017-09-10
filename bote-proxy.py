@@ -102,7 +102,8 @@ class BoteSender:
 
     _acceptedMimeTypes = ['multipart/encrypted']
     _filteringMimeTypes = ['text/plain']
-
+    _blacklistHeaders = ["Received"]
+    
     _bote_host = None
     _bote_port = None
     _bote_user = None
@@ -158,8 +159,8 @@ class BoteSender:
         log("filtering message....")
         newmsg = EmailMessage()
         for k, v in msg.items():
-            log("{} = {}".format(k, v))
-            newmsg[k] = v
+            if k not in self._blacklistHeaders:
+                newmsg[k] = v
 
         addedParts = 0
             
