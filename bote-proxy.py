@@ -185,7 +185,11 @@ class BoteSender:
         """
         try:
             data = AsciiData(part.get_payload())
-            return len(data.packets()) > 0
+            packets = list()
+            for pkt in data.packets():
+                packets.append(pkt)
+            log("valid pgp message with {} packets".format(len(packets)))
+            return len(packets) > 0
         except:
             return False
             
